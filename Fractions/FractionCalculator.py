@@ -1,3 +1,7 @@
+import re
+from functools import reduce
+
+
 #okek bulmak lazım
 #okek payda'yı bulmak için
 #okek LCM ingilizcede
@@ -24,12 +28,102 @@ def lcm(x, y):
    return lcm
 
 
-# take input from the user
-num1 = int(input("Enter first number: "))
-num2 = int(input("Enter second number: "))
+def findLcm(listDenominator):
+    x = reduce(lcm, listDenominator)
+    return x
 
-print("The L.C.M. of", num1,"and", num2,"is", lcm(num1, num2))
+def stringSeperator(stringFraction):
+    den = re.search(r"(\d+)(/)(\d+)", stringFraction)
+    listFractionMember = [den.group(1), den.group(2), den.group(3)]
+    return listFractionMember
 
-#toplama çıkarma çarpma bölme
+def calculator(FractionMemberList, operator, lcm):
+    #pay payda eşitleme işlemi yap.
 
-#sadeleştirme
+    for x in FractionMemberList:
+        a = lcm / eval(x.denumerator)
+        newNom = a*eval(x.numerator)
+        newDenom = lcm
+        x.numerator = int(newNom)
+        x.denumerator = int(newDenom)
+        print(x.numerator)
+        print(x.denumerator)
+
+    def _sumf():
+        total = 0
+        totaldenum = 0
+        for x in FractionMemberList:
+            total = total + int(x.numerator)
+            totaldenum = x.denumerator
+        print("%d / %d" % (total, totaldenum))
+        print("sadelesiyor")
+        _sadelestir(total, totaldenum)
+
+
+    def _subf():
+        total = int(FractionMemberList[0].numerator) - int(FractionMemberList[1].numerator)
+        totaldenum = FractionMemberList[0].denumerator
+        print("%d / %d" % (total, totaldenum))
+
+    def _mulf():
+        L = []
+        for x in FractionMemberList:
+            L.append(x.numerator)
+        total = reduce(lambda x,y : x*y, L)
+        totaldenum = FractionMemberList[0].denumerator
+        print("%d / %d" % (total, totaldenum))
+
+    def _divf():
+        L = []
+        for x in FractionMemberList:
+            L.append(x.numerator)
+        total = reduce(lambda x,y : int(x/y), L)
+        totaldenum = FractionMemberList[0].denumerator
+        print("%d / %d" % (total, totaldenum))
+
+    def _sadelestir(x,y):
+        num = x
+        denum = y
+        x = simplify_fraction(num, denum)
+        print(x)
+
+    def mygcd(x, y):
+        while y != 0:
+            (x, y) = (y, x % y)
+        return x
+
+    def simplify_fraction(numer, denom):
+        if denom == 0:
+            return "Division by 0 - result undefined"
+
+        common_divisor = mygcd(numer, denom)
+        print("cmd is: %d" %(common_divisor))
+        (reduced_num, reduced_den) = (numer / common_divisor, denom / common_divisor)
+
+        if reduced_den == 1:
+            return "%d/%d is simplified to %d" % (numer, denom, reduced_num)
+        elif common_divisor == 1:
+            return "%d/%d is already at its most simplified state" %(numer,denom)
+        else:
+            return "%d/%d is simplified to %d/%d" % (numer,denom,reduced_num,reduced_den)
+
+
+
+
+
+
+
+
+
+
+    switcher = {
+        "+" : _sumf,
+        "-" : _subf,
+        "*" : _mulf,
+        "/" : _divf
+        }
+    print("operator is :" + operator)
+    switcher.get(operator)()
+
+
+
