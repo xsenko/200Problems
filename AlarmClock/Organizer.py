@@ -57,6 +57,7 @@ class AlarmClock:
             else:
                 print("bozuklukvar")
 
+
     def startAlarm(self):
         self.ttime = self.giveNext()
         alarm1 = AlarmAlerter(self.ttime)
